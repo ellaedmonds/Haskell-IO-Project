@@ -31,4 +31,29 @@
     * Letters that do not occur in the text are not listed in the output at all.
 -}
 
-main = putStrLn "Put your program here!"
+import Data.List
+
+import Data.Char (toLower)
+
+filteredletters n = filter (`elem`['a'..'z']) n
+
+sortedletters n = sort (filteredletters n)
+
+groupletters n = group $ sortedletters n
+
+showlengths n = map length $ groupletters n
+
+lengthgroupzip n = zip (showlengths n) (groupletters n)
+
+sortedzip n = sort $ reverse $ lengthgroupzip n
+
+justletters n = map (\(a,b) -> b) (sortedzip n) 
+
+lengsortletter n = sortBy (\x y -> length y `compare` length x) $ justletters n
+
+main = do 
+  putStrLn "Please enter a string of text (the bigger the better): "
+  n <- getLine
+  let m = map toLower n
+  putStrLn ("The distribution of characters in "++show n++" is:")
+  mapM_ putStrLn (lengsortletter m)
